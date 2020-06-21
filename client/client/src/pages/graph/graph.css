@@ -1,0 +1,14 @@
+.graph-container {
+    width: 100%;
+    margin: 2% 0;
+    display: flex;
+    justify-content: center;
+}
+
+#chart {
+    line-height: 0;
+}
+#chart svg {
+    background-color: #fcfcfc;
+    margin: 0;
+}

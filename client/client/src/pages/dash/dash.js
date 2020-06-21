@@ -4,6 +4,7 @@ import Card from '../../components/card/card';
 import './dash.css';
 import axios from 'axios';
 import { aggregatedData } from '../../data/dash.js';
+import Scatter from '../graph/graph';
 import _ from 'underscore';
 
 
@@ -84,7 +85,7 @@ const DashBoard = (props) => {
                     </div>
                 </div>
                 <div className="division-body">
-
+                    <Scatter/>
                 </div>
             </div>
             <div className="division">
