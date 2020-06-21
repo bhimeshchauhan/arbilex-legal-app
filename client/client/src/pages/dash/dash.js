@@ -19,7 +19,11 @@ const DashBoard = (props) => {
                 // Filter the item from aggregateddata to b edited
                 stateCopy.forEach(obj => {
                     if(obj['id'] === key) {
-                        obj.value = value
+                        if(typeof value === 'number') {
+                            obj.value = value
+                        } else {
+                            obj.value = value.max
+                        }
                     }
                 })
             });

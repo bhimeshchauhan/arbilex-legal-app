@@ -39,7 +39,7 @@ def data_aggregation(data):
         if d['finish_date'] and d['start_date']:
             avg_service_duration = [datetime.strptime(d['finish_date'], "%Y-%m-%dT%H:%M:%S") - datetime.strptime(d['start_date'], "%Y-%m-%dT%H:%M:%S")]
     avg_time = (sum(avg_service_duration, timedelta()) / len(avg_service_duration)).total_seconds()
-    aggregated_data['avg_service_duration'] = avg_time/(365.25*24*60*60)
+    aggregated_data['avg_service_duration'] = avg_time//(365.25*24*60*60)
     return aggregated_data
 
 @api_view(['GET', ])

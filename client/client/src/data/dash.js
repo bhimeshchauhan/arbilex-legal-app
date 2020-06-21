@@ -10,19 +10,19 @@ const aggregatedData = [
         'id': 'count'
     },
     {
-        'name': 'Average duration of justice team',
+        'name': 'Average duration of justice team (in years)',
         'value': 0,
-        'id': 'count'
+        'id': 'avg_service_duration'
     },
     {
         'name': 'Most represented nominating party',
         'value': 0,
-        'id': 'count'
+        'id': 'avg_nominating_party'
     },
     {
         'name': 'Most represented law school',
         'value': 0,
-        'id': 'count'
+        'id': 'avg_law_school'
     }
 ]
 
