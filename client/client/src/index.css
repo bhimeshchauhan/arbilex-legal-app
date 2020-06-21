@@ -13,5 +13,9 @@ code {
 }
 
 * {
-  font-family: "Avenir Next W01", "Avenir Next", "Avenir", helvetica, arial, sans-serif;;
+  font-family: "Avenir Next W01", "Avenir Next", "Avenir", helvetica, arial, sans-serif;
+}
+
+html, body {
+  background-color: #F5F6FA;
 }
