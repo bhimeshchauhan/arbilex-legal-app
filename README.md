@@ -24,7 +24,7 @@ Legal application to parse and create data dashboard.
 #### client
 
 1. npm install
-2. npm run
+2. npm start
 
 
 ## View
