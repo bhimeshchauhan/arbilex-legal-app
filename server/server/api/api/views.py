@@ -9,26 +9,31 @@ import requests
 
 def data_aggregation(data):
     aggregated_data = defaultdict(dict)
-    
+    aggregated_data['count'] = len(data)
     military_service = [d['military_service'] for d in data]
-    aggregated_data['avg_military_service']['data'] = Counter(military_service)
-    aggregated_data['avg_military_service']['max'] = max(Counter(military_service), key=Counter(military_service).get)
+    tally = Counter(military_service)
+    aggregated_data['avg_military_service']['data'] = tally
+    aggregated_data['avg_military_service']['max'] = tally[max(tally, key=tally.get)]
 
     is_active = [d['is_active'] for d in data]
-    aggregated_data['avg_is_active']['data'] = Counter(is_active)
-    aggregated_data['avg_is_active']['max'] =  max(Counter(is_active), key=Counter(is_active).get)
+    tally = Counter(is_active)
+    aggregated_data['avg_is_active']['data'] = tally
+    aggregated_data['avg_is_active']['max'] =  tally[max(tally, key=tally.get)]
 
     nominating_party = [d['nominating_party'] for d in data]
-    aggregated_data['avg_nominating_party']['data'] = Counter(nominating_party)
-    aggregated_data['avg_nominating_party']['max'] =  max(Counter(nominating_party), key=Counter(nominating_party).get)
+    tally = Counter(nominating_party)
+    aggregated_data['avg_nominating_party']['data'] = tally
+    aggregated_data['avg_nominating_party']['max'] =  tally[max(tally, key=tally.get)]
 
     law_school = [d['law_school'] for d in data]
-    aggregated_data['avg_law_school']['data'] = Counter(law_school)
-    aggregated_data['avg_law_school']['max'] =  max(Counter(law_school), key=Counter(law_school).get)
+    tally = Counter(law_school)
+    aggregated_data['avg_law_school']['data'] = tally
+    aggregated_data['avg_law_school']['max'] =  tally[max(tally, key=tally.get)]
 
     state_of_birth = [d['state_of_birth'] for d in data]
-    aggregated_data['avg_state_of_birth']['data'] = Counter(state_of_birth)
-    aggregated_data['avg_state_of_birth']['max'] =  max(Counter(state_of_birth), key=Counter(state_of_birth).get)
+    tally = Counter(state_of_birth)
+    aggregated_data['avg_state_of_birth']['data'] = tally
+    aggregated_data['avg_state_of_birth']['max'] =  tally[max(tally, key=tally.get)]
 
     for d in data:
         if d['finish_date'] and d['start_date']:

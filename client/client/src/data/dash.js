@@ -1,24 +1,30 @@
 const aggregatedData = [
     {
         'name': 'Number of Justice',
-        'value': 22
+        'value': 0,
+        'id': 'count'
     },
     {
         'name': 'Number of Cases',
-        'value': 22
+        'value': 0,
+        'id': 'count'
     },
     {
         'name': 'Average duration of justice team',
-        'value': 256
+        'value': 0,
+        'id': 'count'
     },
     {
         'name': 'Most represented nominating party',
-        'value': 23
+        'value': 0,
+        'id': 'count'
     },
     {
         'name': 'Most represented law school',
-        'value': 223
+        'value': 0,
+        'id': 'count'
     }
 ]
+
 
 export { aggregatedData }
