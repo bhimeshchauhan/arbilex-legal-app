@@ -1,11 +1,12 @@
 import React from 'react';
 import NavBar from '../../components/navbar/navbar';
+import Card from '../../components/card/card';
 
 const DashBoard = (props) => {
   return (
     <div>
         <NavBar title={props.title} />
-        <h1>Dash</h1>
+        <Card />
     </div>
   );
 };
