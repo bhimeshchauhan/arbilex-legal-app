@@ -3,15 +3,17 @@ import './card.css';
 
 const Card = (props) => {
   return (
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">
-                    Drive (2011)
+    <div className="container">
+        <div className="card">
+            <div className="card-body">
+                <div className="card-detail">
+                    <div className="card-number">
+                        <span>22</span>
+                    </div>
+                </div>
+                <h2 className="card-title">
+                    Number of Justices
                 </h2>
-                <p class="card-intro">
-                    Driver is a skilled Hollywood stuntman who moonlights as a getaway driv...
-                </p>
             </div>
         </div>
     </div>

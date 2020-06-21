@@ -15,10 +15,17 @@
     border-radius: 10px;
     overflow: hidden;
     margin: 1rem;
+    justify-content: center;
+    text-align: center;
 }
 
 .card-body {
     padding: 1.5rem;
+}
+
+.card-number {
+    font-size: 3em;
+    font-weight: 600;
 }
 
 .card-title {

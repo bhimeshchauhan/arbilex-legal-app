@@ -11,3 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+* {
+  font-family: "Avenir Next W01", "Avenir Next", "Avenir", helvetica, arial, sans-serif;;
+}
