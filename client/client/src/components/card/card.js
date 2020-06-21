@@ -8,11 +8,11 @@ const Card = (props) => {
             <div className="card-body">
                 <div className="card-detail">
                     <div className="card-number">
-                        <span>22</span>
+                        <span>{props.data.value}</span>
                     </div>
                 </div>
                 <h2 className="card-title">
-                    Number of Justices
+                    {props.data.name}
                 </h2>
             </div>
         </div>

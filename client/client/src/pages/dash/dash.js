@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from '../../components/navbar/navbar';
 import Card from '../../components/card/card';
 import './dash.css';
+import { aggregatedData } from '../../data/dash.js';
 
 const DashBoard = (props) => {
   return (
@@ -13,11 +14,11 @@ const DashBoard = (props) => {
                 <button className="details-button">View Details</button>
             </div>
             <div className="division-body">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+                {
+                    aggregatedData.map((data) => {
+                        return <Card data={data}/>
+                    })
+                }
             </div>
         </div>
     </div>
