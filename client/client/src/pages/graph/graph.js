@@ -4,9 +4,6 @@ import * as d3 from "d3";
 import axios from 'axios';
 
 const Scatter = (props) => {
-
-    
-    
     useEffect(() => {
         const url = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
 
@@ -15,7 +12,7 @@ const Scatter = (props) => {
             console.log(data)
             const height = 500,
             width = 1500,
-            margins = { top: 20, right: 100, bottom: 50, left: 50 };
+            margins = { top: 20, right: 100, bottom: 70, left: 50 };
 
             const chart = d3
                 .select(".chart")
@@ -133,25 +130,30 @@ const Scatter = (props) => {
                 .call(d3.axisBottom(xScale));
 
             chart.append("g").call(d3.axisLeft(yScale));
-
+                
             chart
                 .append("text")
                 .style("font-size", "14px")
                 .style("text-anchor", "middle")
+                .attr("class", "xLabel")
                 .attr("x", width / 2)
                 .attr("y", height + 50)
-                .text("Seconds Behind Fastest Time");
+                .text("...");
 
             chart
                 .append("text")
                 .style("font-size", "14px")
                 .style("text-anchor", "middle")
+                .attr("class", "yLabel")
                 .attr("x", height / -2)
                 .attr("y", -30)
                 .attr("transform", "rotate(-90)")
-                .text("Ranking");
+                .text("...");
         });
-    }, []);
+
+        d3.select(".xLabel").text(props.xLabel);
+        d3.select(".yLabel").text(props.yLabel);
+    }, [props]);
     
     
     return (

@@ -12,6 +12,7 @@ const DashBoard = (props) => {
     const [data, setData] = useState(aggregatedData);
     const [yactive, setYactive] = useState("0")
     const [color, setColor] = useState("0")
+    const [labelX, setLabelX] = useState("# of cases judged")
 
     const prepareAggregatedData = async () => {
         await axios.get('http://localhost:8000/api/justices_data/')
@@ -41,8 +42,9 @@ const DashBoard = (props) => {
         prepareAggregatedData();
     }, []);
 
-    const toggleY = (e) => {
+    const toggleX = (e) => {
         const id = e.target.id;
+        setLabelX(e.target.value);
         setYactive(id);
     }
 
@@ -73,8 +75,8 @@ const DashBoard = (props) => {
                     <div className="flex">
                         <h3>y-axis: </h3>
                         <span className="button-group">
-                            <button className={"toggle-button " + (yactive === "0"? "active": "")} id="0" onClick={toggleY}># of cases judged</button>
-                            <button className={"toggle-button " + (yactive === "1"? "active": "")} id="1" onClick={toggleY}>Duration of term</button>
+                            <button className={"toggle-button " + (yactive === "0"? "active": "")} id="0" onClick={toggleX} value="# of cases judged"># of cases judged</button>
+                            <button className={"toggle-button " + (yactive === "1"? "active": "")} id="1" onClick={toggleX} value="Duration of term">Duration of term</button>
                         </span>
                         <h3>Color: </h3>
                         <span className="button-group">
@@ -85,7 +87,7 @@ const DashBoard = (props) => {
                     </div>
                 </div>
                 <div className="division-body">
-                    <Scatter/>
+                    <Scatter xLabel={labelX} yLabel={"Date Joined"}/>
                 </div>
             </div>
             <div className="division">
