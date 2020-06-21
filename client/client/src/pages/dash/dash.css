@@ -28,3 +28,27 @@
     height: 2rem;
     border-radius: 17px;
 }
+
+.toggle-button {
+    border-color: #E7E7E7;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    height: 2rem;
+    border-radius: 5px;
+}
+
+.toggle-button.active {    
+    border: 2px solid green;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    width: 60%;
+}
+
+.flex .button-group {
+    margin: 0 5%;
+}

@@ -24,12 +24,12 @@
 }
 
 .card-number {
-    font-size: 3em;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
 .card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     line-height: 1.33;
     font-weight: 700;
 }
@@ -50,4 +50,9 @@
 .container {
     display: flex;
     margin: 2%;
+}
+
+.card-number{
+    font-weight: 300;
+    text-transform: capitalize;
 }

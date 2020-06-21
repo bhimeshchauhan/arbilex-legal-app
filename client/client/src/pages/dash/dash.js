@@ -4,10 +4,13 @@ import Card from '../../components/card/card';
 import './dash.css';
 import axios from 'axios';
 import { aggregatedData } from '../../data/dash.js';
+import _ from 'underscore';
 
 
 const DashBoard = (props) => {
     const [data, setData] = useState(aggregatedData);
+    const [yactive, setYactive] = useState("0")
+    const [color, setColor] = useState("0")
 
     const prepareAggregatedData = async () => {
         await axios.get('http://localhost:8000/api/justices_data/')
@@ -22,7 +25,8 @@ const DashBoard = (props) => {
                         if(typeof value === 'number') {
                             obj.value = value
                         } else {
-                            obj.value = value.max
+                            console.log((_.invert(value.data))[value.max])
+                            obj.value = (_.invert(value.data))[value.max]
                         }
                     }
                 })
@@ -35,6 +39,16 @@ const DashBoard = (props) => {
         
         prepareAggregatedData();
     }, []);
+
+    const toggleY = (e) => {
+        const id = e.target.id;
+        setYactive(id);
+    }
+
+    const toggleColor = (e) => {
+        const id = e.target.id;
+        setColor(id);
+    }
 
     return (
         <div>
@@ -50,6 +64,34 @@ const DashBoard = (props) => {
                             return <Card data={data} key={id}/>
                         })
                     }
+                </div>
+            </div>
+            <div className="division">
+                <div className="division-header">
+                    <h3>Scatter Plot</h3>
+                    <div className="flex">
+                        <h3>y-axis: </h3>
+                        <span className="button-group">
+                            <button className={"toggle-button " + (yactive === "0"? "active": "")} id="0" onClick={toggleY}># of cases judged</button>
+                            <button className={"toggle-button " + (yactive === "1"? "active": "")} id="1" onClick={toggleY}>Duration of term</button>
+                        </span>
+                        <h3>Color: </h3>
+                        <span className="button-group">
+                            <button className={"toggle-button " + (color === "0"? "active": "")} id="0" onClick={toggleColor}>Millitary Experience</button>
+                            <button className={"toggle-button " + (color === "1"? "active": "")} id="1" onClick={toggleColor}>Law School</button>
+                            <button className={"toggle-button " + (color === "2"? "active": "")} id="2" onClick={toggleColor}>Party Appointed By</button>
+                        </span>
+                    </div>
+                </div>
+                <div className="division-body">
+
+                </div>
+            </div>
+            <div className="division">
+                <div className="division-header">
+                    <h3>Cascading timeline</h3>
+                </div>
+                <div className="division-body">
                 </div>
             </div>
         </div>

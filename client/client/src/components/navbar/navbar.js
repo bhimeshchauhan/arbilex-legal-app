@@ -21,6 +21,7 @@ const NavBar = (props) => {
         <div className="nav-links">
             <a href="/">Main</a>
             <a href="/dash">Dash</a>
+            <a href="/dash">Aggregate Detail</a>
         </div>
     </div>
   );
