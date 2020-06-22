@@ -17,7 +17,7 @@ const Scatter = (props) => {
                 return new Date(e.start_date);
             })));
             data.forEach(element => {
-                element['duration'] = (new Date(element.finish_date).getTime() - new Date(element.start_date).getTime())/(1000*365.25*24*60*60)
+                element['duration'] = Math.round((new Date(element.finish_date).getTime() - new Date(element.start_date).getTime())/(1000*365.25*24*60*60))
                 element['startDateInYears'] = new Date(element.start_date)
             });
             const height = 500,
@@ -101,9 +101,9 @@ const Scatter = (props) => {
             }
             var mousemove = function(d) {
                 Tooltip
-                    .html(d.name+
-                        "<br/>"+d.duration+
-                        "<br/>"+d.startDateInYears)
+                    .html("<strong>Name: </strong>"+d.name+
+                        "<br/><strong>Time as Justice: </strong>"+d.duration+" years"+
+                        "<br/><strong>"+props.xLabel+": </strong>"+d.startDateInYears.toDateString())
                     .style("left", (d3.mouse(this)[0]+70) + "px")
                     .style("top", (d3.mouse(this)[1]+470) + "px")
                     .style("display", "block")
@@ -129,13 +129,13 @@ const Scatter = (props) => {
                 .enter()
                 .append("text")
                 .text((d) => {
-                return d.Name;
+                    return d.Name;
                 })
                 .attr("x", (d) => {
-                return xScale(d.Seconds - fastestTime);
+                    return xScale(d.Seconds - fastestTime);
                 })
                 .attr("y", (d) => {
-                return yScale(d.Place);
+                    return yScale(d.Place);
                 })
                 .attr("transform", "translate(10,5)");
 
