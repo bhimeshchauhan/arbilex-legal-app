@@ -25,9 +25,8 @@ const Scatter = (props) => {
             margins = { top: 20, right: 100, bottom: 70, left: 50 };
             const colorScale = d3.scaleOrdinal()
                 .range(d3.schemeCategory10);
-            const colorValue = (d) => {
-                return d.duration
-            };
+            var myColor = d3.scaleLinear().domain([1, data.length/2])
+                .range(["skyblue", "darkblue"])
 
             const chart = d3
                 .select(".chart")
@@ -52,7 +51,7 @@ const Scatter = (props) => {
                 .domain([
                     d3.max(data, (d) => {
                         return d.duration;
-                    }) + 5,
+                    }),
                     0
                 ]);
 
@@ -74,10 +73,10 @@ const Scatter = (props) => {
                     return yScale(d.startDateInYears);
                 })
                 .style("fill", (d) => {
-                    console.log(colorScale(colorValue(d)))
-                    return colorScale(colorValue(d))
+                    console.log(myColor(d.duration))
+                    return myColor(d.duration)
                 })
-                .attr('fill-opacity', 0.6);
+                .attr('fill-opacity', 1);
 
             const Tooltip = d3
                 .select(".graph-container")
@@ -115,7 +114,7 @@ const Scatter = (props) => {
                     .style("display", "none");
                 d3.select(this)
                     .style("stroke", "none")
-                    .style("opacity", 0.8)
+                    .style("opacity", 1)
             }
 
             dots
