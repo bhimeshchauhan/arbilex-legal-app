@@ -10,9 +10,9 @@ import _ from 'underscore';
 
 const DashBoard = (props) => {
     const [data, setData] = useState(aggregatedData);
-    const [yactive, setYactive] = useState("0")
+    const [yactive, setYactive] = useState("1")
     const [color, setColor] = useState("0")
-    const [labelX, setLabelX] = useState("# of cases judged")
+    const [labelX, setLabelX] = useState("Duration of term")
 
     const prepareAggregatedData = async () => {
         await axios.get('http://localhost:8000/api/justices_data/')
@@ -27,7 +27,6 @@ const DashBoard = (props) => {
                         if(typeof value === 'number') {
                             obj.value = value
                         } else {
-                            console.log((_.invert(value.data))[value.max])
                             obj.value = (_.invert(value.data))[value.max]
                         }
                     }

@@ -45,7 +45,6 @@ def data_aggregation(data):
 @api_view(['GET', ])
 def retrieve_justice_aggregation(request):
     try:
-        # justice = Justice.objects.all()
         url = "http://frontend-exercise-api.herokuapp.com/justices/"
         response = requests.get(url)
         justice = {"status": status.HTTP_200_OK , "data": data_aggregation(response.json())}

@@ -5,14 +5,29 @@ import axios from 'axios';
 
 const Scatter = (props) => {
     useEffect(() => {
-        const url = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
+        const url = "http://frontend-exercise-api.herokuapp.com/justices/";
 
         axios.get(url).then((res) => {
             const data = res.data;
-            console.log(data)
+
+            const minDate = new Date(Math.min.apply(null, data.map(function(e) {
+                return new Date(e.start_date);
+            })));
+            const maxDate = new Date(Math.max.apply(null, data.map(function(e) {
+                return new Date(e.start_date);
+            })));
+            data.forEach(element => {
+                element['duration'] = (new Date(element.finish_date).getTime() - new Date(element.start_date).getTime())/(1000*365.25*24*60*60)
+                element['startDateInYears'] = new Date(element.start_date)
+            });
             const height = 500,
             width = 1500,
             margins = { top: 20, right: 100, bottom: 70, left: 50 };
+            const colorScale = d3.scaleOrdinal()
+                .range(d3.schemeCategory10);
+            const colorValue = (d) => {
+                return d.duration
+            };
 
             const chart = d3
                 .select(".chart")
@@ -28,23 +43,22 @@ const Scatter = (props) => {
                 .on("mouseleave", mouseleave);
 
             const fastestTime = d3.min(data, (d) => {
-                return d.Seconds;
+                return d.duration;
             });
 
             const xScale = d3
                 .scaleLinear()
                 .range([width, 0])
                 .domain([
-                    0,
                     d3.max(data, (d) => {
-                        return d.Seconds - fastestTime;
-                    }) + 5
+                        return d.duration;
+                    }) + 5,
+                    0
                 ]);
 
-            const yScale = d3
-                .scaleLinear()
+            const yScale = d3.scaleTime()
                 .range([0, height])
-                .domain([1, data.length + 1]);
+                .domain([maxDate, minDate])
 
             const dots = chart
                 .selectAll("dot")
@@ -52,19 +66,18 @@ const Scatter = (props) => {
                 .enter()
                 .append("circle")
                 .attr("r", 5)
+                .attr("transform", "translate(20, 0)")
                 .attr("cx", (d) => {
-                    return xScale(d.Seconds - fastestTime);
+                    return xScale(d.duration);
                 })
                 .attr("cy", (d) => {
-                    return yScale(d.Place);
+                    return yScale(d.startDateInYears);
                 })
                 .style("fill", (d) => {
-                    if (d.Doping) {
-                        return "indianred";
-                    } else {
-                        return "lightgrey";
-                    }
-                });
+                    console.log(colorScale(colorValue(d)))
+                    return colorScale(colorValue(d))
+                })
+                .attr('fill-opacity', 0.6);
 
             const Tooltip = d3
                 .select(".graph-container")
@@ -82,30 +95,33 @@ const Scatter = (props) => {
             var mouseover = function(d) {
                 Tooltip
                     .style("opacity", 1)
+                    .style("display", "block")
                 d3.select(this)
                     .style("stroke", "black")
                     .style("opacity", 1)
             }
             var mousemove = function(d) {
                 Tooltip
-                    .html(d.Name+
-                        "<br/>"+d.Nationality+
-                        "<br/>"+d.Doping+
-                        "<br/>"+d.Year)
+                    .html(d.name+
+                        "<br/>"+d.duration+
+                        "<br/>"+d.startDateInYears)
                     .style("left", (d3.mouse(this)[0]+70) + "px")
-                    .style("top", (d3.mouse(this)[1]+400) + "px")
+                    .style("top", (d3.mouse(this)[1]+470) + "px")
+                    .style("display", "block")
             }
             var mouseleave = function(d) {
                 Tooltip
                     .style("opacity", 0)
+                    .style("display", "none");
                 d3.select(this)
                     .style("stroke", "none")
                     .style("opacity", 0.8)
             }
+
             dots
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave);
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave);
             
 
             chart
@@ -126,10 +142,12 @@ const Scatter = (props) => {
 
             chart
                 .append("g")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(20," + height + ")")
                 .call(d3.axisBottom(xScale));
 
-            chart.append("g").call(d3.axisLeft(yScale));
+            chart.append("g")
+                .attr("transform", "translate(20,0)")
+                .call(d3.axisLeft(yScale));
                 
             chart
                 .append("text")
@@ -145,6 +163,7 @@ const Scatter = (props) => {
                 .style("font-size", "14px")
                 .style("text-anchor", "middle")
                 .attr("class", "yLabel")
+                .attr("transform", "translate(" + height + ", 0)")
                 .attr("x", height / -2)
                 .attr("y", -30)
                 .attr("transform", "rotate(-90)")
