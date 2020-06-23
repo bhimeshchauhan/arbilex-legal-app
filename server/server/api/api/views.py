@@ -56,13 +56,10 @@ def retrieve_justice_aggregation(request):
         return Response(justice)
 
 
-@api_view(['GET', ])
+@api_view(['POST', ])
 def retrieve_urls(request):
-    # urls = getAllUrl('http://scdb.wustl.edu/')
-
-    if request.method == 'GET':
-        rscraper = RecursiveScraper("http://scdb.wustl.edu/")
-        data = rscraper.scrape()
-        print('DATATATATA ', data);
-        # return StreamingHttpResponse(main())
-        return Response(data)
+    if request.method == 'POST':
+        return Response(request.data)
+        # rscraper = RecursiveScraper("http://scdb.wustl.edu/")
+        # data = rscraper.scrape()
+        # return Response(data)

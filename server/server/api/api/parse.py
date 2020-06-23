@@ -6,10 +6,12 @@ from bs4 import BeautifulSoup
 
 
 class RecursiveScraper:
-    ''' Scrape URLs in a recursive manner.
+    ''' 
+    Scrape URLs in a recursive manner.
     '''
     def __init__(self, url):
-        ''' Constructor to initialize domain name and main URL.
+        ''' 
+        Constructor to initialize domain name and main URL.
         '''
         self.domain = urlsplit(url).netloc
         self.mainurl = url
@@ -18,14 +20,15 @@ class RecursiveScraper:
         self.files = set()
 
     def preprocess_url(self, referrer, url):
-        ''' Clean and filter URLs before scraping.
+        ''' 
+        Clean and filter URLs before scraping.
         '''
         if not url:
             return None
 
-        fields = urlsplit(urljoin(referrer, url))._asdict() # convert to absolute URLs and split
-        fields['path'] = re.sub(r'/$', '', fields['path']) # remove trailing /
-        fields['fragment'] = '' # remove targets within a page
+        fields = urlsplit(urljoin(referrer, url))._asdict()
+        fields['path'] = re.sub(r'/$', '', fields['path']) 
+        fields['fragment'] = ''
         fields = SplitResult(**fields)
         if fields.netloc == self.domain:
             # Scrape pages of current domain only
@@ -36,24 +39,21 @@ class RecursiveScraper:
                 httpsurl = cleanurl = fields.geturl()
                 httpurl = httpsurl.replace('https:', 'http:', 1)
             if httpurl not in self.urls and httpsurl not in self.urls:
-                # Return URL only if it's not already in list
                 return cleanurl
 
         return None
 
     def is_searchable(self, url):
         http_message = requests.head(url).headers["content-type"]
-        print('http_message',http_message, " : ", url)
         full = http_message
         main = http_message.split('/')[0]
-        if main == 'application':
-            print('saving... ', url)
+        if (main == 'application' and ("case" and "xlsx" in url)):
             self.files.add(url)
         return (main == 'text' and full == 'text/html')
 
     def scrape(self, url=None):
-        ''' Scrape the URL and its outward links in a depth-first order.
-            If URL argument is None, start from main page.
+        ''' 
+        Scrape the URL and its outward links uding DFS. If URL argument is None, start from main page.
         '''
         if url is None:
             url = self.mainurl
