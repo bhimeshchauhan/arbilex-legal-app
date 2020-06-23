@@ -30,3 +30,9 @@ Legal application to parse and create data dashboard.
 ## View
 
 Access application on 127.0.0.1:3000/ and the admin on 127.0.0.1:8000/admin <use your password you created to login>
+
+
+### Important
+
+Install geckodriver (On MAC)
+> brew install geckodriver

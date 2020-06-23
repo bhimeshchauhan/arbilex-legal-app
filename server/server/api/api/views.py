@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
+from .parse import RecursiveScraper
 
 import requests
 
@@ -53,3 +54,15 @@ def retrieve_justice_aggregation(request):
 
     if request.method == 'GET':
         return Response(justice)
+
+
+@api_view(['GET', ])
+def retrieve_urls(request):
+    # urls = getAllUrl('http://scdb.wustl.edu/')
+
+    if request.method == 'GET':
+        rscraper = RecursiveScraper("http://scdb.wustl.edu/")
+        data = rscraper.scrape()
+        print('DATATATATA ', data);
+        # return StreamingHttpResponse(main())
+        return Response(data)
