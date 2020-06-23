@@ -4,8 +4,9 @@ from rest_framework.decorators import api_view
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 from .parse import RecursiveScraper
-
+import json
 import requests
+from .serializers import URLSerializer
 
 
 def data_aggregation(data):
@@ -59,7 +60,15 @@ def retrieve_justice_aggregation(request):
 @api_view(['POST', ])
 def retrieve_urls(request):
     if request.method == 'POST':
-        return Response(request.data)
-        # rscraper = RecursiveScraper("http://scdb.wustl.edu/")
-        # data = rscraper.scrape()
-        # return Response(data)
+        url = request.data['url']
+        rscraper = RecursiveScraper(url)
+        data = rscraper.scrape()
+        for item in data:
+            submitData = {
+                url: item['url'],
+                columns: json.dumps(item['columns'])
+            }
+            serializer = URLSerializer(submitData)
+            if serializer.is_valid():
+                serializer.save()
+        return Response(data)

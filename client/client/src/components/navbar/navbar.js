@@ -1,5 +1,6 @@
 import React from 'react';
 import './navbar.css';
+import { NavLink } from 'react-router-dom';
 
 const NavBar = (props) => {
   return (
@@ -19,9 +20,9 @@ const NavBar = (props) => {
         </div>
         
         <div className="nav-links">
-            <a href="/">Main</a>
-            <a href="/dash">Dash</a>
-            <a href="/dash">Aggregate Detail</a>
+            <NavLink exact to="/" activeClassName="active">Main</NavLink>
+            <NavLink exact to="/dash" activeClassName="active">Dash</NavLink>
+            <NavLink exact to="/aggregate" activeClassName="active">Aggregate Detail</NavLink>
         </div>
     </div>
   );

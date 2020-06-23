@@ -4,6 +4,11 @@ from urllib.parse import urljoin, urlsplit, SplitResult
 import requests
 from bs4 import BeautifulSoup
 
+from io import BytesIO
+from zipfile import ZipFile
+import urllib
+import pandas as pd
+
 
 class RecursiveScraper:
     ''' 
@@ -17,7 +22,7 @@ class RecursiveScraper:
         self.mainurl = url
         self.urls = set()
         self.count = 0
-        self.files = set()
+        self.files = []
 
     def preprocess_url(self, referrer, url):
         ''' 
@@ -43,12 +48,22 @@ class RecursiveScraper:
 
         return None
 
+    def get_columns(self, url):
+        urlData = urlopen(url)
+        with ZipFile(BytesIO(urlData.read())) as my_zip_file:
+            for contained_file in my_zip_file.namelist():
+                with my_zip_file.open(contained_file, 'r') as file:
+                    return pd.read_excel(file).columns.values
+
     def is_searchable(self, url):
         http_message = requests.head(url).headers["content-type"]
         full = http_message
         main = http_message.split('/')[0]
         if (main == 'application' and ("case" and "xlsx" in url)):
-            self.files.add(url)
+            if not any(d.get('url', url) == url for d in self.files):
+                columns = self.get_columns(url).tolist()
+                print(columns)
+                self.files.append({'url': url, 'columns': columns})
         return (main == 'text' and full == 'text/html')
 
     def scrape(self, url=None):

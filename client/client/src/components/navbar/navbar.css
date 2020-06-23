@@ -87,3 +87,8 @@
         overflow-y: auto;
     }
 }
+
+.active {
+    color: green !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
