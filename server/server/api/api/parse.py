@@ -48,23 +48,17 @@ class RecursiveScraper:
 
         return None
 
-    def get_columns(self, url):
-        urlData = urlopen(url)
-        with ZipFile(BytesIO(urlData.read())) as my_zip_file:
-            for contained_file in my_zip_file.namelist():
-                with my_zip_file.open(contained_file, 'r') as file:
-                    return pd.read_excel(file).columns.values
-
     def is_searchable(self, url):
         http_message = requests.head(url).headers["content-type"]
         full = http_message
         main = http_message.split('/')[0]
-        if (main == 'application' and ("case" and "xlsx" in url)):
+        if ((main == 'application') and (("2019" in url and "caseCentered" in url) or ("Legacy" in url and "caseCentered" in url)) and "xlsx"in url and url not in self.urls):
             if not any(d.get('url', url) == url for d in self.files):
-                columns = self.get_columns(url).tolist()
-                print(columns)
-                self.files.append({'url': url, 'columns': columns})
-        return (main == 'text' and full == 'text/html')
+                # columns = self.get_columns(url).tolist()
+                # SCDB_2019_01_caseCentered_Citation.xlsx.zip
+                self.files.append({'url': url, 'columns': []})
+                self.urls.add(url)
+        return (main == 'text' and full == 'text/html' and url not in self.urls)
 
     def scrape(self, url=None):
         ''' 
@@ -75,9 +69,8 @@ class RecursiveScraper:
 
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'lxml')
-        self.urls.add(url)
         if self.is_searchable(url):
-            print(self.count, "Scraping {:s} ...".format(url))
+            self.urls.add(url)
             self.count += 1
             for link in soup.findAll("a"):
                 childurl = self.preprocess_url(url, link.get("href"))
@@ -85,5 +78,21 @@ class RecursiveScraper:
                     self.scrape(childurl)
         return self.files
 
+    def get_columns(self, url=None):
+        if url is None:
+            url = self.mainurl
+        urlData = urlopen(url)
+        with ZipFile(BytesIO(urlData.read())) as my_zip_file:
+            for contained_file in my_zip_file.namelist():
+                with my_zip_file.open(contained_file, 'r') as file:
+                    return pd.read_excel(file).columns.values
     
-    
+    def isValidURL(self, url):
+        regex = re.compile(
+            r'^(?:http|ftp)s?://' # http:// or https://
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+            r'localhost|' #localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+            r'(?::\d+)?' # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        return re.match(regex, url) is not None

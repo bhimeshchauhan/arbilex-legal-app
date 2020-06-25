@@ -36,6 +36,11 @@
 .container-instruction .instructions .controls-div .controls {
     margin: 2rem;
     display: inline-block;
+    width: 92%;
+}
+
+.container-instruction .instructions .controls-div .controls input{
+    width: 100%;
 }
 
 .container-instruction .instructions .controls-div .load-btn {
@@ -64,6 +69,21 @@
 }
 
 .link-list {
-    overflow: scroll;
     list-style-type: none;
+}
+
+.url {
+    display: flex;
+    align-items: center;
+}
+
+.link-list .url .select {
+    margin: 0 2%;
+    cursor: pointer;
+}
+
+.link-list .url li a {
+    margin: 0 2%;
+    text-decoration: none;
+    color: #3391ff;
 }

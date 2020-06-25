@@ -28,8 +28,10 @@ class Justice(models.Model):
         return self.avg_service_duration
 
 class URLScraped(models.Model):
+    id = models.IntegerField(primary_key=True)
     url = models.CharField(max_length=2000)
     columns = models.CharField(max_length=2000)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.url

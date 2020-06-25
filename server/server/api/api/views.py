@@ -4,9 +4,11 @@ from rest_framework.decorators import api_view
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 from .parse import RecursiveScraper
+from .utility import Utility
 import json
 import requests
 from .serializers import URLSerializer
+from server.api.models import URLScraped
 
 
 def data_aggregation(data):
@@ -58,17 +60,56 @@ def retrieve_justice_aggregation(request):
 
 
 @api_view(['POST', ])
-def retrieve_urls(request):
+def scrape_urls(request):
     if request.method == 'POST':
         url = request.data['url']
         rscraper = RecursiveScraper(url)
         data = rscraper.scrape()
+        if(len(data) == 0):
+            res = {"status": status.HTTP_200_OK , "data": "No urls found with the specified search term."}
+            return Response(res)
         for item in data:
             submitData = {
-                url: item['url'],
-                columns: json.dumps(item['columns'])
+                'url': item['url'],
+                'columns': json.dumps(item['columns']),
             }
-            serializer = URLSerializer(submitData)
-            if serializer.is_valid():
+            serializer = URLSerializer(data=submitData)
+            qs = URLScraped.objects.filter(url=item['url'])
+            retrieve_serializer = URLSerializer(instance=qs, many=True)
+            if serializer.is_valid() and not retrieve_serializer.data:
                 serializer.save()
+
+        return Response(serializer.data)
+
+@api_view(['GET', ])
+def retrieve_case_url(request):
+	try:
+		links = URLScraped.objects.all()
+	except URLScraped.DoesNotExist:
+		return Response(status=status.HTTP_404_NOT_FOUND)
+	
+	if request.method == 'GET':
+		serializer = URLSerializer(links, many=True)
+		return Response(serializer.data)
+
+
+@api_view(['POST', ])
+def retrieve_columns(request):
+    if request.method == 'POST':
+        url = request.data['url']
+        isValid = Utility.isValidURL(url)
+        if not isValid:
+            error = {
+                "err": "Invalid email."
+            }
+            return Response(error, status = status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        else:
+            try:
+                rscraper = RecursiveScraper(url)
+                data = rscraper.get_columns()
+            except:
+                error = {
+                    "err": "Unable to fetch columns for this url."
+                }
+                return Response(data.to_list(), status = status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(data)

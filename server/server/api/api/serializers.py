@@ -8,4 +8,5 @@ class URLSerializer(serializers.ModelSerializer):
 		fields = [
 			'url',
 			'columns',
+            'active',
 		]
