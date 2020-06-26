@@ -20,6 +20,7 @@
 }
 
 .container-instruction .instructions ul{
+    overflow: scroll;
     padding-left: 2em;
 }
 
@@ -86,4 +87,18 @@
     margin: 0 2%;
     text-decoration: none;
     color: #3391ff;
+}
+
+.load-data{
+    display: flex;
+    justify-content: flex-end;
+    margin: 1%;
+}
+
+.load-data .load-btn {
+    background-color: transparent;
+    width: 10rem;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
 }

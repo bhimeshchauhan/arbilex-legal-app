@@ -12,9 +12,17 @@ const BaseTemplate = (props) => {
   const[url, setUrl] = useState("http://scdb.wustl.edu/index.php")
   const[isError, setError] = useState(false)
   const[urlData, seturlData] = useState([])
-  const[progress, updateProgress] = useState(0)
+  const[progress, updateProgress] = useState(null)
+  let[count, updateCount] = useState(0)
   const[loopURL, loopURLData] = useState([])
 
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+
+  // Cancel requests
+  useEffect(() => {
+    source.cancel('Operations cancelled on reload.');
+  }, [])
 
   const retrieveData = async () => {
     let apiurl = 'http://localhost:8000/api/case_urls/'
@@ -31,32 +39,46 @@ const BaseTemplate = (props) => {
     retrieveData()
   }, [isLoading])
 
-  const retrieve_columns = async(url, count) => {
+  const changeColumns = ( searchTerm, changeObject ) => {
+    let tempURLData = [...urlData]
+    for (var i in tempURLData) {
+      if (tempURLData[i].url == searchTerm) {
+          tempURLData[i].columns = JSON.parse(changeObject);
+          seturlData(tempURLData)
+          break; //Stop this loop, we found it!
+      }
+    }
+  }
+
+  const retrieve_columns = async(url) => {
+    console.log(count);
     let apiurl = 'http://localhost:8000/api/columns/'
-    console.log(urlData.length)
     let payload = {
       url: url
     }
-    axios.post(apiurl, payload).then((res) => {
-      console.log(res);
+    await axios.post(apiurl, payload, {
+      cancelToken: source.token
+    }).then((res) => {
+      console.log(res.status, count);
+      updateCount(count += 1);
       if(res.status === 200) {
-        updateProgress((count / urlData.length)*100)
-        setLoading(false);
+        updateProgress(Math.floor((count / urlData.length)*100))
+        changeColumns(url, res.data)
+        // let temp = [...urlData]
         // seturlData(res.data);
       }
     })
   }
 
-
-  useEffect(() => {
+  const loadColumnData = (e) => {
+    e.preventDefault();
+    updateProgress(1);
     if(urlData.length !== 0){
-      let count = 0
       urlData.forEach((item) => {
-        count += 1
-        // retrieve_columns(item.url, count)
+        retrieve_columns(item.url)
       })
     }
-  }, [urlData])
+  }
 
   const loadData = (e) => {
     e.preventDefault();
@@ -114,7 +136,7 @@ const BaseTemplate = (props) => {
     <div>
       <NavBar title={props.title} />
       {isLoading ? <Loader />: null}
-      {progress < 100 && progress > 0 ? <PercentLoader percent={progress.toString()}/>: null}
+      {progress < 100 && progress >= 0 && progress != null ? <PercentLoader percent={progress.toString()}/>: null}
       <div className="container-instruction">
         <div className="header">
           <h2>ArbiLex-Justice Data Representation</h2>
@@ -148,6 +170,7 @@ const BaseTemplate = (props) => {
           <div className="header">
             <h3>Data</h3>
           </div>
+          <div className="load-data"><button className="load-btn" onClick={loadColumnData}>Load Data</button></div>
           <ul className="link-list">
             { urlData ? 
               urlData.map((data, id) => {

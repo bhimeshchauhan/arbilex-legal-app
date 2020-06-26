@@ -4,15 +4,13 @@ import './percent.css';
 const PercentLoader = (props) => {
     const [style, setStyle] = useState({});
     
-    useState(() => {
-        setTimeout(() => {
-            const newStyle = {
-              opacity: 1,
-              width: `${props.percent}%`
-            };
-            setStyle(newStyle);
-          }, 100);
-    }, [props]);
+    useEffect(() => {
+        const newStyle = {
+            opacity: 1,
+            width: `${props.percent}%`
+        };
+        setStyle(newStyle);
+    }, [props.percent]);
     
     return (
         <div className="backdrop">

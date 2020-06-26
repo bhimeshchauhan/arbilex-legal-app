@@ -71,7 +71,7 @@ def scrape_urls(request):
         for item in data:
             submitData = {
                 'url': item['url'],
-                'columns': json.dumps(item['columns']),
+                'columns': list(),
             }
             serializer = URLSerializer(data=submitData)
             qs = URLScraped.objects.filter(url=item['url'])
@@ -100,16 +100,16 @@ def retrieve_columns(request):
         isValid = Utility.isValidURL(url)
         if not isValid:
             error = {
-                "err": "Invalid email."
+                "err": "Invalid URL."
             }
             return Response(error, status = status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         else:
             try:
                 rscraper = RecursiveScraper(url)
-                data = rscraper.get_columns()
+                data = rscraper.get_data()
             except:
                 error = {
                     "err": "Unable to fetch columns for this url."
                 }
-                return Response(data.to_list(), status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(data, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(data)

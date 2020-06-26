@@ -78,14 +78,14 @@ class RecursiveScraper:
                     self.scrape(childurl)
         return self.files
 
-    def get_columns(self, url=None):
+    def get_data(self, url=None):
         if url is None:
             url = self.mainurl
         urlData = urlopen(url)
         with ZipFile(BytesIO(urlData.read())) as my_zip_file:
             for contained_file in my_zip_file.namelist():
                 with my_zip_file.open(contained_file, 'r') as file:
-                    return pd.read_excel(file).columns.values
+                    return pd.read_excel(file).to_json()
     
     def isValidURL(self, url):
         regex = re.compile(
