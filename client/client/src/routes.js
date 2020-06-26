@@ -1,15 +1,24 @@
-import React from "react"
-import { Route, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Route } from "react-router-dom";
 import BaseTemplate from "./pages/base/base";
 import DashBoard from "./pages/dash/dash";
+import NavBar from './components/navbar/navbar';
 
 const Routes = () => {
+  const[mainData, setMainData] = useState([])
+
+
+  const updateData = (columns) => {
+    setMainData(prevState => [...prevState, JSON.parse(columns)]);
+  };
+ 
   return (
-    <div>
-      <Route exact path="/" component={() => <BaseTemplate title={'ArbiLex'} useLocation={useLocation.pathname} />} />
-      <Route exact path="/dash" component={() => <DashBoard title={'ArbiLex'} useLocation={useLocation.pathname} />} />
+    <div className="home">
+      <NavBar title={'ArbiLex'} />
+      <Route exact path="/" render={() => <BaseTemplate updateData={updateData}/>} />
+      <Route exact path="/dash" render={() => <DashBoard mainData={mainData}/>} />
     </div>
   )
-}
+};
 
 export default Routes

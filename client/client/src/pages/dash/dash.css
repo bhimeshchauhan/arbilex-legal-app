@@ -10,7 +10,7 @@
 
 .division-body {
     overflow-x: scroll;
-    padding-right: 2em;
+    justify-content: center;
 }
 
 .division-header{

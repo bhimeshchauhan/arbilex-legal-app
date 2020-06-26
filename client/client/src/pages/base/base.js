@@ -1,23 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import NavBar from '../../components/navbar/navbar';
 import './base.css';
 import { instruction } from '../../data/instruction';
+import { useHistory } from "react-router-dom";
 import Loader from '../../components/loader/loader';
 import PercentLoader from '../../components/percent/percent';
 import Error from '../../components/error/error';
 import axios from 'axios';
 
+
 const BaseTemplate = (props) => {
-  const[isLoading, setLoading] = useState(false)
-  const[url, setUrl] = useState("http://scdb.wustl.edu/index.php")
-  const[isError, setError] = useState(false)
-  const[urlData, seturlData] = useState([])
-  const[progress, updateProgress] = useState(null)
+  let[isLoading, setLoading] = useState(false)
+  let[url, setUrl] = useState("http://scdb.wustl.edu/index.php")
+  let[isError, setError] = useState(false)
+  let[urlData, seturlData] = useState([])
+  let[progress, updateProgress] = useState(null)
   let[count, updateCount] = useState(0)
-  const[loopURL, loopURLData] = useState([])
+  let[loopURL, loopURLData] = useState([])
 
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
+  let history = useHistory();
 
   // Cancel requests
   useEffect(() => {
@@ -28,21 +30,19 @@ const BaseTemplate = (props) => {
     let apiurl = 'http://localhost:8000/api/case_urls/'
     await axios.get(apiurl).then((res) => {
       if(res.status === 200) {
-        // setLoading(false);
         seturlData(res.data)
       }
     })
   }
 
   useEffect(() => {
-    // setLoading(true);
     retrieveData()
   }, [isLoading])
 
   const changeColumns = ( searchTerm, changeObject ) => {
     let tempURLData = [...urlData]
     for (var i in tempURLData) {
-      if (tempURLData[i].url == searchTerm) {
+      if (tempURLData[i].url === searchTerm) {
           tempURLData[i].columns = JSON.parse(changeObject);
           seturlData(tempURLData)
           break; //Stop this loop, we found it!
@@ -50,33 +50,35 @@ const BaseTemplate = (props) => {
     }
   }
 
-  const retrieve_columns = async(url) => {
-    console.log(count);
-    let apiurl = 'http://localhost:8000/api/columns/'
-    let payload = {
-      url: url
-    }
-    await axios.post(apiurl, payload, {
-      cancelToken: source.token
-    }).then((res) => {
-      console.log(res.status, count);
-      updateCount(count += 1);
-      if(res.status === 200) {
-        updateProgress(Math.floor((count / urlData.length)*100))
-        changeColumns(url, res.data)
-        // let temp = [...urlData]
-        // seturlData(res.data);
-      }
-    })
-  }
-
   const loadColumnData = (e) => {
     e.preventDefault();
     updateProgress(1);
     if(urlData.length !== 0){
-      urlData.forEach((item) => {
-        retrieve_columns(item.url)
+      let promises = []
+      urlData.forEach(async (item) => {
+        let apiurl = 'http://localhost:8000/api/columns/'
+        let payload = {
+          url: item.url
+        }
+        promises.push(
+          axios.post(apiurl, payload, {
+            cancelToken: source.token
+          })
+        )
       })
+      Promise.all(promises).then(function (results) {
+        results.forEach(function (res) {
+          updateCount(count += 1);
+          if(res.status === 200) {
+            updateProgress(Math.floor((count / urlData.length)*100));
+            changeColumns(url, res.data);
+            props.updateData(res.data);
+            // let temp = [...urlData];
+            // seturlData(res.data);
+          }
+        });
+        history.push('/dash');
+      });
     }
   }
 
@@ -134,7 +136,6 @@ const BaseTemplate = (props) => {
   }
   return (
     <div>
-      <NavBar title={props.title} />
       {isLoading ? <Loader />: null}
       {progress < 100 && progress >= 0 && progress != null ? <PercentLoader percent={progress.toString()}/>: null}
       <div className="container-instruction">
@@ -170,7 +171,7 @@ const BaseTemplate = (props) => {
           <div className="header">
             <h3>Data</h3>
           </div>
-          <div className="load-data"><button className="load-btn" onClick={loadColumnData}>Load Data</button></div>
+          <div className="load-data"><button className="load-btn" onClick={loadColumnData}>Load Sheet Data</button></div>
           <ul className="link-list">
             { urlData ? 
               urlData.map((data, id) => {
@@ -190,12 +191,13 @@ const BaseTemplate = (props) => {
                       href={data.url} 
                       target="_blank" 
                       className="link"
+                      rel="noopener noreferrer"
                     >
                       {name[name.length-1]}
                     </a>
                   </li>
                   </div>
-              }) : null
+              }) : <p>Scrape data source first.</p>
             }
           </ul>
         </div>

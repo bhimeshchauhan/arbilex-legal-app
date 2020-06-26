@@ -3,7 +3,7 @@ import './card.css';
 
 const Card = (props) => {
   return (
-    <div className="container">
+    <div className="card-container">
         <div className="card">
             <div className="card-body">
                 <div className="card-detail">

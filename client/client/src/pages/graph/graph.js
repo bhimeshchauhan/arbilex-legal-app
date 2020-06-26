@@ -9,6 +9,7 @@ const Scatter = (props) => {
 
         axios.get(url).then((res) => {
             const data = res.data;
+            console.log(data);
 
             const minDate = new Date(Math.min.apply(null, data.map(function(e) {
                 return new Date(e.start_date);
@@ -23,8 +24,6 @@ const Scatter = (props) => {
             const height = 500,
             width = 1500,
             margins = { top: 20, right: 100, bottom: 70, left: 50 };
-            const colorScale = d3.scaleOrdinal()
-                .range(d3.schemeCategory10);
             var myColor = d3.scaleLinear().domain([1, data.length/2])
                 .range(["skyblue", "darkblue"])
 
@@ -36,10 +35,7 @@ const Scatter = (props) => {
                 .attr(
                 "transform",
                 "translate(" + margins.left + "," + margins.top + ")"
-                )
-                .on("mouseover", mouseover)
-                .on("mousemove", mousemove)
-                .on("mouseleave", mouseleave);
+                );
 
             const fastestTime = d3.min(data, (d) => {
                 return d.duration;
@@ -73,7 +69,6 @@ const Scatter = (props) => {
                     return yScale(d.startDateInYears);
                 })
                 .style("fill", (d) => {
-                    console.log(myColor(d.duration))
                     return myColor(d.duration)
                 })
                 .attr('fill-opacity', 1);

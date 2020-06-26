@@ -19,11 +19,11 @@
   /*
     Set the color of the icon
   */
-  svg{
+  .loader svg{
     margin-top: 25%;
   }
   
-  svg path,
-  svg rect{
+  .loader svg path,
+  .loader svg rect{
     fill: #FF6700;
   }

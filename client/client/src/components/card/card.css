@@ -47,9 +47,7 @@
     border-radius: 4px;
 }
 
-.container {
-    display: flex;
-    margin: 2%;
+.card-container {
 }
 
 .card-number{
