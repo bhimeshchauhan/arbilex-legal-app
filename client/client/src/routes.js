@@ -6,17 +6,25 @@ import NavBar from './components/navbar/navbar';
 
 const Routes = () => {
   const[mainData, setMainData] = useState([])
+  const[url, setURL] = useState([])
 
 
-  const updateData = (columns) => {
+  const updateCol = (columns) => {
+    console.log('columns', columns);
     setMainData(prevState => [...prevState, JSON.parse(columns)]);
+  };
+
+
+  const updateURL = (url) => {
+    console.log('url', url)
+    setURL(url);
   };
  
   return (
     <div className="home">
       <NavBar title={'ArbiLex'} />
-      <Route exact path="/" render={() => <BaseTemplate updateData={updateData}/>} />
-      <Route exact path="/dash" render={() => <DashBoard mainData={mainData}/>} />
+      <Route exact path="/" render={() => <BaseTemplate updateCol={updateCol} updateURL={updateURL}/>} />
+      <Route exact path="/dash" render={() => <DashBoard mainData={mainData} url={url}/>} />
     </div>
   )
 };

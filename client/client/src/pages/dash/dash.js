@@ -15,40 +15,44 @@ const DashBoard = (props) => {
     const [labelX, setLabelX] = useState("Duration of term")
     const [xData, setxData] = useState(0)
     const [yData, setyData] = useState(0)
+    const [graphData, setGraphData] = useState([])
     let history = useHistory();
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
 
     useEffect(() => {
         console.log(Object.keys(props.mainData).length)
         if(Object.keys(props.mainData).length === 0){
-            history.push('');
-        }
-        const length = Object.keys(props.mainData[0]['caseId']).length;
-        const prepareAggregatedData = async () => {
-            await axios.get('http://localhost:8000/api/justices_data/')
-            .then((response) => {
-                const res = response.data.data
-                var stateCopy = Object.assign([], summaryData);
-                Object.keys(res).forEach(key => {
-                    let value = res[key];
-                    // Filter the item from aggregateddata to b edited
-                    stateCopy.forEach(obj => {
-                        if(obj['id'] === key) {
-                            if(typeof value === 'number') {
-                                if(obj['name'] === "Number of Cases") {
-                                    obj.value = length
+            // history.push('');
+        } else {
+            const length = Object.keys(props.mainData[0]['caseId']).length;
+            const prepareAggregatedData = async () => {
+                await axios.get('http://localhost:8000/api/justices_data/')
+                .then((response) => {
+                    const res = response.data.data
+                    var stateCopy = Object.assign([], summaryData);
+                    Object.keys(res).forEach(key => {
+                        let value = res[key];
+                        // Filter the item from aggregateddata to b edited
+                        stateCopy.forEach(obj => {
+                            if(obj['id'] === key) {
+                                if(typeof value === 'number') {
+                                    if(obj['name'] === "Number of Cases") {
+                                        obj.value = length
+                                    } else {
+                                        obj.value = value
+                                    }
                                 } else {
-                                    obj.value = value
+                                    obj.value = (_.invert(value.data))[value.max]
                                 }
-                            } else {
-                                obj.value = (_.invert(value.data))[value.max]
                             }
-                        }
-                    })
+                        })
+                    });
+                    setSummaryData(stateCopy)
                 });
-                setSummaryData(stateCopy)
-            });
+            }
+            prepareAggregatedData();
         }
-        prepareAggregatedData();
     },[props.mainData]);
 
     const toggleX = (e) => {
@@ -61,6 +65,58 @@ const DashBoard = (props) => {
         const id = e.target.id;
         setColor(id);
     }
+
+
+    // const changeColumns = ( searchTerm, changeObject ) => {
+    //     let tempURLData = [...graphData]
+    //     for (var i in tempURLData) {
+    //         if (tempURLData[i].url === searchTerm) {
+    //             tempURLData[i].columns = JSON.parse(changeObject);
+    //             setGraphData(tempURLData)
+    //             break; //Stop this loop, we found it!
+    //         }
+    //     }
+    // }
+    
+    const loadColumnData = () => {
+        console.log('datataatatas', props.url)
+        let promises = []
+        props.url.forEach(async (item) => {
+            let apiurl = 'http://localhost:8000/api/columns/'
+            let payload = {
+                url: item.url
+            }
+            promises.push(
+                axios.post(apiurl, payload, {
+                    cancelToken: source.token
+                })
+            )
+        })
+        Promise.all(promises).then(function (results) {
+            results.forEach(function (res) {
+                if(res.status === 200) {
+                    // changeColumns(url, res.data);
+                    console.log('graph data', res.data);
+                    // let temp = [...urlData];
+                    // seturlData(res.data);
+                }
+            });
+        });
+    }
+
+    // Graph Data
+    useEffect(() => {
+        if(labelX === "Duration of term") {
+            const url = "http://frontend-exercise-api.herokuapp.com/justices/";
+            axios.get(url).then((res) => {
+                const data = res.data;
+                // console.log('graphData',data);
+                setGraphData(data);
+            });
+        } else {
+            loadColumnData()
+        }
+    }, [labelX])
 
     return (
         <div>
@@ -95,7 +151,7 @@ const DashBoard = (props) => {
                     </div>
                 </div>
                 <div className="division-body">
-                    <Scatter xLabel={labelX} yLabel={"Date Joined"}/>
+                    <Scatter xLabel={labelX} yLabel={"Date Joined"} data={graphData}/>
                 </div>
             </div>
             <div className="division">

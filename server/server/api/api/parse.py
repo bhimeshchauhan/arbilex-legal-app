@@ -1,12 +1,12 @@
 import re
+import csv
 from urllib.request import urlopen
 from urllib.parse import urljoin, urlsplit, SplitResult
 import requests
 from bs4 import BeautifulSoup
 
-from io import BytesIO
+import io
 from zipfile import ZipFile
-import urllib
 import pandas as pd
 
 
@@ -52,11 +52,11 @@ class RecursiveScraper:
         http_message = requests.head(url).headers["content-type"]
         full = http_message
         main = http_message.split('/')[0]
-        if ((main == 'application') and (("2019" in url and "caseCentered" in url) or ("Legacy" in url and "caseCentered" in url)) and "xlsx"in url and url not in self.urls):
+        if ((main == 'application') and (("2019" in url and "caseCentered" in url) or ("Legacy" in url and "caseCentered" in url)) and "csv"in url and url not in self.urls):
             if not any(d.get('url', url) == url for d in self.files):
                 # columns = self.get_columns(url).tolist()
                 # SCDB_2019_01_caseCentered_Citation.xlsx.zip
-                self.files.append({'url': url, 'columns': []})
+                self.files.append({'url': url, 'columns': [], 'active': True})
                 self.urls.add(url)
         return (main == 'text' and full == 'text/html' and url not in self.urls)
 
@@ -81,11 +81,17 @@ class RecursiveScraper:
     def get_data(self, url=None):
         if url is None:
             url = self.mainurl
-        urlData = urlopen(url)
-        with ZipFile(BytesIO(urlData.read())) as my_zip_file:
-            for contained_file in my_zip_file.namelist():
-                with my_zip_file.open(contained_file, 'r') as file:
-                    return pd.read_excel(file).to_json()
+        urlData = urlopen(url).read()
+        csv_file = ZipFile(io.BytesIO(urlData))
+        for item in csv_file.namelist():
+            f = csv_file.open(item)
+            try:
+                case_csv = pd.read_csv(f,encoding='cp1252')
+                case_csv.fillna(0, inplace=True)
+                print('row ', case_csv.shape)
+            except Exception as e:
+                raise(e)
+        return case_csv.to_dict('records')
     
     def isValidURL(self, url):
         regex = re.compile(

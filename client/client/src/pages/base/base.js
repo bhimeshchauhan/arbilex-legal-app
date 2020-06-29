@@ -39,6 +39,10 @@ const BaseTemplate = (props) => {
     retrieveData()
   }, [isLoading])
 
+  useEffect(() => {
+    props.updateURL(urlData);
+  }, [urlData])
+
   const changeColumns = ( searchTerm, changeObject ) => {
     let tempURLData = [...urlData]
     for (var i in tempURLData) {
@@ -72,7 +76,7 @@ const BaseTemplate = (props) => {
           if(res.status === 200) {
             updateProgress(Math.floor((count / urlData.length)*100));
             changeColumns(url, res.data);
-            props.updateData(res.data);
+            props.updateCol(res.data);
             // let temp = [...urlData];
             // seturlData(res.data);
           }

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from server.api.models import URLScraped
+from server.api.models import URLScraped, ColumnData
 
 
 class URLSerializer(serializers.ModelSerializer):
@@ -7,6 +7,64 @@ class URLSerializer(serializers.ModelSerializer):
 		model = URLScraped
 		fields = [
 			'url',
-			'columns',
             'active',
+		]
+
+class ColumnSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ColumnData
+		fields = [
+			'adminAction',
+			'adminActionState',
+			'authorityDecision1',
+			'authorityDecision2',
+			'caseDisposition',
+			'caseDispositionUnusual',
+			'caseId',
+			'caseIssuesId',
+			'caseName',
+			'caseOrigin',
+			'caseOriginState',
+			'caseSource',
+			'caseSourceState',
+			'certReason',
+			'chief',
+			'dateArgument',
+			'dateDecision',
+			'dateRearg',
+			'decisionDirection',
+			'decisionDirectionDissent',
+			'decisionType',
+			'declarationUncon',
+			'docket',
+			'docketId',
+			'issue',
+			'issueArea',
+			'jurisdiction',
+			'lawMinor',
+			'lawSupp',
+			'lawType',
+			'lcDisagreement',
+			'lcDisposition',
+			'lcDispositionDirection',
+			'ledCite',
+			'lexisCite',
+			'majOpinAssigner',
+			'majOpinWriter',
+			'majVotes',
+			'minVotes',
+			'naturalCourt',
+			'partyWinning',
+			'petitioner',
+			'petitionerState',
+			'precedentAlteration',
+			'respondent',
+			'respondentState',
+			'sctCite',
+			'splitVote',
+			'term',
+			'threeJudgeFdc',
+			'usCite',
+			'voteId',
+			'voteUnclear',
 		]

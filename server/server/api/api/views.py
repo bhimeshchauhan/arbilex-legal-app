@@ -7,8 +7,8 @@ from .parse import RecursiveScraper
 from .utility import Utility
 import json
 import requests
-from .serializers import URLSerializer
-from server.api.models import URLScraped
+from .serializers import URLSerializer, ColumnSerializer
+from server.api.models import URLScraped, ColumnData
 
 
 def data_aggregation(data):
@@ -71,14 +71,17 @@ def scrape_urls(request):
         for item in data:
             submitData = {
                 'url': item['url'],
-                'columns': list(),
+                'columns': item['columns'],
+                'active': item['active']
             }
+            print('submit ', submitData)
             serializer = URLSerializer(data=submitData)
             qs = URLScraped.objects.filter(url=item['url'])
             retrieve_serializer = URLSerializer(instance=qs, many=True)
-            if serializer.is_valid() and not retrieve_serializer.data:
+            if serializer.is_valid():
                 serializer.save()
-
+            else:
+                print('*** ', serializer.errors)
         return Response(serializer.data)
 
 @api_view(['GET', ])
@@ -93,7 +96,7 @@ def retrieve_case_url(request):
 		return Response(serializer.data)
 
 
-@api_view(['POST', ])
+@api_view(['POST', 'DELETE', ])
 def retrieve_columns(request):
     if request.method == 'POST':
         url = request.data['url']
@@ -107,9 +110,29 @@ def retrieve_columns(request):
             try:
                 rscraper = RecursiveScraper(url)
                 data = rscraper.get_data()
-            except:
+                # ColumnData.objects.all().delete()
+                for item in data:
+                    serializer = ColumnSerializer(data=item)
+                    if serializer.is_valid():
+                        print(item)
+                        serializer.save()
+                    else:
+                        print('data- ----', serializer.data)
+                        print('err- ----', serializer.errors)
+                        break
+            except Exception as e:
                 error = {
-                    "err": "Unable to fetch columns for this url."
+                    "err": e
                 }
-                return Response(data, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(data)
+                return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status = status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        try:
+            ColumnData.objects.all().delete()
+        except Exception as e:
+            error = {
+                "err": e
+            }
+            return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status = status.HTTP_200_OK)
+    
