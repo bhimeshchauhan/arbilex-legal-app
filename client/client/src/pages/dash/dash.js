@@ -26,6 +26,13 @@ const DashBoard = (props) => {
         })
     }, [])
 
+    useEffect(() => {
+        console.log('datataatatas', props.url)
+        if(props.url.length == 0){
+            history.push('')
+        }
+    }, [])
+
     const toggleX = (e) => {
         const id = e.target.id;
         setLabelX(e.target.value);
@@ -50,29 +57,28 @@ const DashBoard = (props) => {
     // }
     
     const loadColumnData = () => {
-        console.log('datataatatas', props.url)
         let promises = []
-        props.url.forEach(async (item) => {
-            let apiurl = 'http://localhost:8000/api/columns/'
-            let payload = {
-                url: item.url
-            }
-            promises.push(
-                axios.post(apiurl, payload, {
-                    cancelToken: source.token
-                })
-            )
-        })
-        Promise.all(promises).then(function (results) {
-            results.forEach(function (res) {
-                if(res.status === 200) {
-                    // changeColumns(url, res.data);
-                    console.log('graph data', res.data);
-                    // let temp = [...urlData];
-                    // seturlData(res.data);
-                }
-            });
-        });
+        // props.url.forEach(async (item) => {
+        //     let apiurl = 'http://localhost:8000/api/columns/'
+        //     let payload = {
+        //         url: item.url
+        //     }
+        //     promises.push(
+        //         axios.post(apiurl, payload, {
+        //             cancelToken: source.token
+        //         })
+        //     )
+        // })
+        // Promise.all(promises).then(function (results) {
+        //     results.forEach(function (res) {
+        //         if(res.status === 200) {
+        //             // changeColumns(url, res.data);
+        //             console.log('graph data', res.data);
+        //             // let temp = [...urlData];
+        //             // seturlData(res.data);
+        //         }
+        //     });
+        // });
     }
 
     // Graph Data
@@ -81,11 +87,11 @@ const DashBoard = (props) => {
             const url = "http://frontend-exercise-api.herokuapp.com/justices/";
             axios.get(url).then((res) => {
                 const data = res.data;
-                // console.log('graphData',data);
+                console.log('graphData',data);
                 setGraphData(data);
             });
         } else {
-            // loadColumnData()
+            loadColumnData()
         }
     }, [labelX])
 

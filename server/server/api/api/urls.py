@@ -4,7 +4,8 @@ from server.api.api.views import (
 	scrape_urls,
 	retrieve_case_url,
 	retrieve_columns,
-	retrieve_columns_data
+	retrieve_columns_data,
+	retrieve_all_columns
 )
 
 
@@ -16,4 +17,5 @@ urlpatterns = [
 	path('case_urls/', retrieve_case_url, name="allCaseURL"),
 	path('columns/', retrieve_columns, name="urlColumns"),
 	path('columns_data/', retrieve_columns_data, name="urlColumns"),
+	path('columns_graph_data/', retrieve_all_columns, name="urlColumns"),
 ]

@@ -1,14 +1,15 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from collections import Counter, defaultdict
-from datetime import datetime, timedelta
-from .parse import RecursiveScraper
-from .utility import Utility
 import json
 import requests
-from .serializers import URLSerializer, ColumnSerializer, ColumnDataSerializer
+from .utility import Utility
+from rest_framework import status
+from .parse import RecursiveScraper
+from django.core import serializers
+from datetime import datetime, timedelta
+from collections import Counter, defaultdict
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from server.api.models import URLScraped, ColumnData
+from .serializers import URLSerializer, ColumnSerializer, ColumnDataSerializer
 
 
 def data_aggregation(data):
@@ -106,7 +107,15 @@ def retrieve_columns_data(request):
             return Response(json.dumps(serializer.data), status = status.HTTP_200_OK)
         else:
             print(serializer.errors)
-        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET', ])
+def retrieve_all_columns(request):
+    querySet = ColumnData.objects.all()
+    print(querySet)
+    if request.method == 'GET':
+        data = serializers.serialize('json', querySet)
+        return Response(json.dumps(data), status = status.HTTP_200_OK)
 
 @api_view(['POST', 'DELETE', ])
 def retrieve_columns(request):
