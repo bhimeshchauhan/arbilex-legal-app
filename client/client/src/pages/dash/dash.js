@@ -3,13 +3,13 @@ import { useHistory } from "react-router-dom";
 import Card from '../../components/card/card';
 import './dash.css';
 import axios from 'axios';
-import { aggregatedData } from '../../data/dash.js';
+import { getAggregratedData } from '../../data/dash.js';
 import Scatter from '../graph/graph';
 import _ from 'underscore';
 
 
 const DashBoard = (props) => {
-    const [summaryData, setSummaryData] = useState(aggregatedData);
+    const [aggregateData, setAggregateData] = useState([]);
     const [yactive, setYactive] = useState("1")
     const [color, setColor] = useState("0")
     const [labelX, setLabelX] = useState("Duration of term")
@@ -21,39 +21,10 @@ const DashBoard = (props) => {
     const source = CancelToken.source();
 
     useEffect(() => {
-        console.log(Object.keys(props.mainData).length)
-        if(Object.keys(props.mainData).length === 0){
-            // history.push('');
-        } else {
-            const length = Object.keys(props.mainData[0]['caseId']).length;
-            const prepareAggregatedData = async () => {
-                await axios.get('http://localhost:8000/api/justices_data/')
-                .then((response) => {
-                    const res = response.data.data
-                    var stateCopy = Object.assign([], summaryData);
-                    Object.keys(res).forEach(key => {
-                        let value = res[key];
-                        // Filter the item from aggregateddata to b edited
-                        stateCopy.forEach(obj => {
-                            if(obj['id'] === key) {
-                                if(typeof value === 'number') {
-                                    if(obj['name'] === "Number of Cases") {
-                                        obj.value = length
-                                    } else {
-                                        obj.value = value
-                                    }
-                                } else {
-                                    obj.value = (_.invert(value.data))[value.max]
-                                }
-                            }
-                        })
-                    });
-                    setSummaryData(stateCopy)
-                });
-            }
-            prepareAggregatedData();
-        }
-    },[props.mainData]);
+        getAggregratedData().then(data => {
+            setAggregateData(data);
+        })
+    }, [])
 
     const toggleX = (e) => {
         const id = e.target.id;
@@ -114,7 +85,7 @@ const DashBoard = (props) => {
                 setGraphData(data);
             });
         } else {
-            loadColumnData()
+            // loadColumnData()
         }
     }, [labelX])
 
@@ -127,7 +98,7 @@ const DashBoard = (props) => {
                 </div>
                 <div className="division-body">
                     {
-                        summaryData.map((data, id) => {
+                        aggregateData.map((data, id) => {
                             return <Card data={data} key={id}/>
                         })
                     }

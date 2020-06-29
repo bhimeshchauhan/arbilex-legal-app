@@ -3,7 +3,8 @@ from server.api.api.views import (
 	retrieve_justice_aggregation,
 	scrape_urls,
 	retrieve_case_url,
-	retrieve_columns
+	retrieve_columns,
+	retrieve_columns_data
 )
 
 
@@ -14,4 +15,5 @@ urlpatterns = [
 	path('scrape_urls/', scrape_urls, name="allUrls"),
 	path('case_urls/', retrieve_case_url, name="allCaseURL"),
 	path('columns/', retrieve_columns, name="urlColumns"),
+	path('columns_data/', retrieve_columns_data, name="urlColumns"),
 ]

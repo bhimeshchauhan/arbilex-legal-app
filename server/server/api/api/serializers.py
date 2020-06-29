@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from server.api.models import URLScraped, ColumnData
+from server.api.models import URLScraped, ColumnData, ColumnDataDetail
 
 
 class URLSerializer(serializers.ModelSerializer):
@@ -8,6 +8,13 @@ class URLSerializer(serializers.ModelSerializer):
 		fields = [
 			'url',
             'active',
+		]
+
+class ColumnDataSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ColumnDataDetail
+		fields = [
+            'count',
 		]
 
 class ColumnSerializer(serializers.ModelSerializer):

@@ -7,7 +7,7 @@ from .parse import RecursiveScraper
 from .utility import Utility
 import json
 import requests
-from .serializers import URLSerializer, ColumnSerializer
+from .serializers import URLSerializer, ColumnSerializer, ColumnDataSerializer
 from server.api.models import URLScraped, ColumnData
 
 
@@ -95,6 +95,18 @@ def retrieve_case_url(request):
 		serializer = URLSerializer(links, many=True)
 		return Response(serializer.data)
 
+@api_view(['GET', ])
+def retrieve_columns_data(request):
+    if request.method == 'GET':
+        data = {
+            'count': ColumnData.objects.count()
+        }
+        serializer = ColumnDataSerializer(data=data)
+        if serializer.is_valid():
+            return Response(json.dumps(serializer.data), status = status.HTTP_200_OK)
+        else:
+            print(serializer.errors)
+        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST', 'DELETE', ])
 def retrieve_columns(request):
@@ -110,16 +122,10 @@ def retrieve_columns(request):
             try:
                 rscraper = RecursiveScraper(url)
                 data = rscraper.get_data()
-                # ColumnData.objects.all().delete()
                 for item in data:
                     serializer = ColumnSerializer(data=item)
                     if serializer.is_valid():
-                        print(item)
                         serializer.save()
-                    else:
-                        print('data- ----', serializer.data)
-                        print('err- ----', serializer.errors)
-                        break
             except Exception as e:
                 error = {
                     "err": e

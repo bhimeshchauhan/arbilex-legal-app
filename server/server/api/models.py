@@ -93,3 +93,10 @@ class ColumnData(models.Model):
 
     def __int__(self):
         return self.id
+
+
+class ColumnDataDetail(models.Model):
+    count = models.IntegerField()
+
+    def __str__(self):
+        return self.data
