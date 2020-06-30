@@ -1,6 +1,7 @@
 import json
 import requests
 from .utility import Utility
+from collections import Counter
 from rest_framework import status
 from .parse import RecursiveScraper
 from django.core import serializers
@@ -112,15 +113,17 @@ def retrieve_columns_data(request):
 @api_view(['GET', ])
 def retrieve_all_columns(request):
     querySet = ColumnData.objects.all()
-    print(querySet)
     if request.method == 'GET':
         data = serializers.serialize('json', querySet)
-        return Response(json.dumps(data), status = status.HTTP_200_OK)
+        generator = [item['dateArgument'] for item in ColumnData.objects.values()]
+        # return Response(json.dumps(Counter(generator)), status = status.HTTP_200_OK)
+        return Response(json.loads(data), status = status.HTTP_200_OK)
 
 @api_view(['POST', 'DELETE', ])
 def retrieve_columns(request):
     if request.method == 'POST':
         url = request.data['url']
+        print('Retrieving date: ', url)
         isValid = Utility.isValidURL(url)
         if not isValid:
             error = {
@@ -139,7 +142,7 @@ def retrieve_columns(request):
                 error = {
                     "err": e
                 }
-                return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+                pass
         return Response(status = status.HTTP_200_OK)
     elif request.method == 'DELETE':
         try:

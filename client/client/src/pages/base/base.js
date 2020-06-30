@@ -43,17 +43,6 @@ const BaseTemplate = (props) => {
     props.updateURL(urlData);
   }, [urlData])
 
-  const changeColumns = ( searchTerm, changeObject ) => {
-    let tempURLData = [...urlData]
-    for (var i in tempURLData) {
-      if (tempURLData[i].url === searchTerm) {
-          tempURLData[i].columns = JSON.parse(changeObject);
-          seturlData(tempURLData)
-          break; //Stop this loop, we found it!
-      }
-    }
-  }
-
   const loadColumnData = (e) => {
     e.preventDefault();
     updateProgress(1);
@@ -74,11 +63,8 @@ const BaseTemplate = (props) => {
         results.forEach(function (res) {
           updateCount(count += 1);
           if(res.status === 200) {
+            console.log('data ====> ', res.data)
             updateProgress(Math.floor((count / urlData.length)*100));
-            changeColumns(url, res.data);
-            props.updateCol(res.data);
-            // let temp = [...urlData];
-            // seturlData(res.data);
           }
         });
         history.push('/dash');
