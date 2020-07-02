@@ -1,6 +1,11 @@
 # arbilex-legal-app
 Legal application to parse and create data dashboard.
 
+## Tech Stack
+
+| | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/back-2.png"> |  <img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/frontend.png">|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/backend.png">|
 
 ## Folder
 
