@@ -133,7 +133,7 @@ const BaseTemplate = (props) => {
           <h2>ArbiLex-Justice Data Representation</h2>
         </div>
         <div className="instructions">
-          <div className="header">
+          <div className="header-sub">
             <h3>Instruction</h3>
           </div>
           <ul>
@@ -145,13 +145,14 @@ const BaseTemplate = (props) => {
           </ul>
         </div>
         <div className="instructions">
-          <div className="header">
+          <div className="header-sub">
             <h3>Control Panel</h3>
           </div>
           <div className="controls-div">
             <form className="controls" onSubmit={loadData}>
-              <label htmlFor="url">URL</label>
-              <input className="url" type="text" name="url" onChange={handleURLChange} placeholder="http://scdb.wustl.edu/index.php" />
+              <label htmlFor="url">URL (default for url: http://scdb.wustl.edu/index.php)</label>
+              <input className="url" type="text" name="url" onChange={handleURLChange} placeholder="http://scdb.wustl.edu/index.php" 
+                    disabled="disabled"/>
               <button className="load-btn">{urlData ? 'Reload Data' : 'Load Data'}</button>
             </form>
             {isError ? <Error message="url invalid"/>: null}
@@ -174,6 +175,7 @@ const BaseTemplate = (props) => {
                     value={data.url} 
                     onChange={updateDataSource}
                     checked={data.active}
+                    disabled="disabled"
                   >
                   </input>
                   <li className={'check-'+id}>

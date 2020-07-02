@@ -1,15 +1,16 @@
 .division {
     margin: 2%;
     border: #E7E7E7 1px solid;
-    background-color: white;
+    background-color: #FFF;
+    border-radius: 10px;
 }
+
 .division-body, .division-header{
     display: flex;
-    border: #E7E7E7 1px solid;
 }
 
 .division-body {
-    overflow-x: scroll;
+    overflow-x: auto;
     justify-content: center;
 }
 
@@ -17,16 +18,7 @@
     justify-content: space-between;
     padding: 0 2%;
     align-items: center;
-}
-
-.details-button {
-    border-color: #E7E7E7;
-    cursor: pointer;
-    outline: none;
-    box-shadow: none;
-    background-color: transparent;
-    height: 2rem;
-    border-radius: 17px;
+    border-bottom: #E7E7E7 1px solid;
 }
 
 .toggle-button {

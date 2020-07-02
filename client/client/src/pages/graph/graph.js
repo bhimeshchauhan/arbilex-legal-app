@@ -4,10 +4,9 @@ import './graph.css';
 import * as d3 from "d3";
 
 const Scatter = (props) => {
-    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         // setIsLoading(true);
-        d3.selectAll("svg > *").remove();
+        d3.selectAll(".graph-container > .scatter-chart > *").remove();
         const data = props.data;
 
         const minDate = new Date(Math.min.apply(null, data.map(function(e) {
@@ -23,7 +22,7 @@ const Scatter = (props) => {
             .range(["skyblue", "darkblue"])
 
         const chart = d3
-            .select(".chart")
+            .select(".scatter-chart")
             .attr("width", width + margins.left + margins.right)
             .attr("height", height + margins.top + margins.bottom)
             .append("g")
@@ -51,7 +50,7 @@ const Scatter = (props) => {
             .data(data)
             .enter()
             .append("circle")
-            .attr("r", 5)
+            .attr("r", 7)
             .attr("transform", "translate(20, 0)")
             .attr("cx", (d) => {
                 return xScale(Object.values(d)[0][0]);
@@ -61,6 +60,7 @@ const Scatter = (props) => {
             })
             .style("fill", (d) => {
                 let color = colorDataString[props.colorIndex][Object.values(d)[0][props.colorIndex]];
+                if (color === undefined) color = 'green';
                 return props.colorIndex ? color : myColor(Object.values(d)[0][0]);
             })
             .attr('fill-opacity', 1);
@@ -85,6 +85,7 @@ const Scatter = (props) => {
             d3.select(this)
                 .style("stroke", "black")
                 .style("opacity", 1)
+                .style("cursor", "pointer")
                 .select("#tipDiv")
                 .append("svg")
         }
@@ -94,7 +95,7 @@ const Scatter = (props) => {
                 "</br><strong>Value: </strong>"+Object.values(d)[0][0]+
                 "</br><strong>"+props.colorActive+": </strong>"+Object.values(d)[0][props.colorIndex])
                 .style("left", (d3.mouse(this)[0]+70) + "px")
-                .style("top", (d3.mouse(this)[1]+470) + "px")
+                .style("top", (d3.mouse(this)[1]+420) + "px")
                 .style("display", "block")
         }
         var mouseleave = function(d) {
@@ -174,8 +175,11 @@ const Scatter = (props) => {
     
     return (
         <div className="graph-container">
-            <svg className="chart"></svg>
-            <svg id="legend"></svg>
+            <svg className="scatter-chart"></svg>
+            {
+                props.xLabel === "Duration of term" ?
+                <svg id="legend"></svg>:null
+            }
         </div>
     );
 };

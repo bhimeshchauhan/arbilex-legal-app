@@ -16,15 +16,17 @@ Legal application to parse and create data dashboard.
 
 #### Server
 
-1. pip install -r requirements.txt
-2. python manage.py migrate
-3. python manage.py createsuperuser --email admin@example.com --username admin > enter password
-4. python manage.py runserver
+1. cd int `server` folder 
+2. pip install -r requirements.txt
+3. python manage.py migrate
+4. python manage.py createsuperuser --email admin@example.com --username admin > enter password
+5. python manage.py runserver
 
 #### client
 
-1. npm install
-2. npm start
+1. cd into `client` folder
+2. npm install
+3. npm start
 
 
 ## View
@@ -36,3 +38,11 @@ Access application on 127.0.0.1:3000/ and the admin on 127.0.0.1:8000/admin <use
 
 Install geckodriver (On MAC)
 > brew install geckodriver
+
+
+### Screenshot
+
+| | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/1.png"> |  <img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/2.png">|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/3.png">|
+|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/4.png">  |  <img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/5.png">|<img width="1604" alt="screen shot 2017-08-07 at 12 18 15 pm" src="./screenshots/6.png">|

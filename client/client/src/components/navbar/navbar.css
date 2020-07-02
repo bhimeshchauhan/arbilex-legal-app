@@ -1,19 +1,21 @@
 
 .nav {
-    height: 50px;
+    height: 3.2rem;
     width: 100%;
-    background-color: #4d4d4d;
+    background-color: transparent;
     position: relative;
+    padding: 2em 0;
 }
 
 .nav > .nav-header {
-    display: inline;    
+    display: inline;  
+    margin-left: 2%;  
 }
 
 .nav > .nav-header > .nav-title {
     display: inline-block;
     font-size: 22px;
-    color: #fff;
+    color: #FF6700;
     padding: 10px 10px 10px 10px;
 }
 
@@ -22,16 +24,22 @@
 }
 
 .nav > .nav-links {
-    display: inline;
+    display: flex;
     float: right;
     font-size: 18px;
+    margin-right: 2%;
 }
 
-.nav > .nav-links > a {
+.nav > .nav-links > a {    
     display: inline-block;
     padding: 13px 10px 13px 10px;
+    margin: 0 2%;
     text-decoration: none;
     color: #efefef;
+    border-radius: 50px;
+    width: 4em;
+    text-align: center;
+    height: 21px;
 }
 
 .nav > .nav-links > a:hover {
@@ -89,6 +97,6 @@
 }
 
 .nav-links .active {
-    color: green !important;
+    color: #FF6700 !important;
     background-color: rgba(0, 0, 0, 0.3);
 }

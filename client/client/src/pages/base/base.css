@@ -1,7 +1,6 @@
 .container-instruction {
-    /* height: 100%; */
-    /* width: 100%; */
-    /* display: block; */
+    overflow: auto;
+    width: 100%;
 }
 
 .container-instruction .header {
@@ -10,24 +9,36 @@
     display: flex;
     margin: 0 10em;
     justify-content: center;
+    color: #FFF;
+}
+
+.container-instruction .header-sub {
+    font-weight: 100;
+    font-size: 1.5rem;
+    display: flex;
+    padding: 0 10em;
+    justify-content: center;
+    border-bottom: #E7E7E7 1px solid;
 }
 
 .container-instruction .instructions {
     margin: 2em 10em;
     font-size: 2rem;
-    border: 2px black solid;
+    border: #E7E7E7 1px solid;
+    background-color: #FFF;
     border-radius: 10px;
 }
 
 .container-instruction .instructions ul{
-    overflow: scroll;
+    overflow: auto;
     padding-left: 2em;
 }
 
 .container-instruction .instructions .header {
     font-size: 2rem;
     margin: 0;
-    border-bottom: 2px black solid;
+    border-bottom: #E7E7E7 1px solid;
+    color: #000;
 }
 
 .container-instruction .instructions .controls-div {

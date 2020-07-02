@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import BaseTemplate from "./pages/base/base";
 import DashBoard from "./pages/dash/dash";
 import NavBar from './components/navbar/navbar';
+import './index.css';
 
 const Routes = () => {
   const[url, setURL] = useState([])

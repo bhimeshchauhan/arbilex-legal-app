@@ -22,7 +22,6 @@ const NavBar = (props) => {
         <div className="nav-links">
             <NavLink exact to="/" activeClassName="active">Main</NavLink>
             <NavLink exact to="/dash" activeClassName="active">Dash</NavLink>
-            <NavLink exact to="/aggregate" activeClassName="active">Aggregate Detail</NavLink>
         </div>
     </div>
   );
